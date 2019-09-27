@@ -27,19 +27,19 @@ void ReadCreatureEntry(FILE*& pFile)
 
     // 11 bits
     char titleBytes[2] = { buffer[1], buffer[0] };
-    short titleLength = (*((short*)titleBytes) >> 5) & 0b11111111111;
-    fprintf(f, "titleLength = %hi\n", titleLength);
+    unsigned short titleLength = (*((unsigned short*)titleBytes) >> 5) & 0b11111111111;
+    fprintf(f, "titleLength = %hu\n", titleLength);
 
     // 11 bits
     char titleAltBytes[2] = { buffer[2], buffer[1] };
-    short titleAltLength = (*((short*)titleAltBytes) >> 2) & 0b11111111111;
-    fprintf(f, "titleAltLength = %hi\n", titleAltLength);
+    unsigned short titleAltLength = (*((unsigned short*)titleAltBytes) >> 2) & 0b11111111111;
+    fprintf(f, "titleAltLength = %hu\n", titleAltLength);
 
     // 8 bits between the string lengths
     // second bit may be Civilian
     char unkBytes[2] = { buffer[3], buffer[2] };
-    short unkByte = (*((short*)unkBytes) >> 2) & 0b11111111;
-    fprintf(f, "unkByte = %hi\n", unkByte);
+    unsigned short unkByte = (*((unsigned short*)unkBytes) >> 2) & 0b11111111;
+    fprintf(f, "unkByte = %hu\n", unkByte);
 
     // 11 bits
     char nameBytes[4] = { buffer[5], buffer[4], buffer[3], 0 };
@@ -48,13 +48,13 @@ void ReadCreatureEntry(FILE*& pFile)
 
     // 11 bits
     char name2Bytes[2] = { buffer[6], buffer[5] };
-    short name2Length = (*((short*)name2Bytes) >> 4) & 0b11111111111;
-    fprintf(f, "name2Length = %hi\n", name2Length);
+    unsigned short name2Length = (*((unsigned short*)name2Bytes) >> 4) & 0b11111111111;
+    fprintf(f, "name2Length = %hu\n", name2Length);
 
     // 11 bits
     char name3Bytes[2] = { buffer[7], buffer[6] };
-    short name3Length = (*((short*)name3Bytes) >> 1) & 0b11111111111;
-    fprintf(f, "name3Length = %hi\n", name3Length);
+    unsigned short name3Length = (*((unsigned short*)name3Bytes) >> 1) & 0b11111111111;
+    fprintf(f, "name3Length = %hu\n", name3Length);
 
     // 11 bits
     char name4Bytes[4] = { buffer[9], buffer[8], buffer[7], 0 };
@@ -63,33 +63,112 @@ void ReadCreatureEntry(FILE*& pFile)
 
     // 11 bits
     char name5Bytes[2] = { buffer[10], buffer[9] };
-    short name5Length = (*((short*)name5Bytes) >> 3) & 0b11111111111;
-    fprintf(f, "name5Length = %hi\n", name5Length);
+    unsigned short name5Length = (*((unsigned short*)name5Bytes) >> 3) & 0b11111111111;
+    fprintf(f, "name5Length = %hu\n", name5Length);
 
     // 11 bits
     char name6Bytes[2] = { buffer[11], buffer[10] };
-    short name6Length = (*((short*)name6Bytes)) & 0b11111111111;
-    fprintf(f, "name6Length = %hi\n", name6Length);
+    unsigned short name6Length = (*((unsigned short*)name6Bytes)) & 0b11111111111;
+    fprintf(f, "name6Length = %hu\n", name6Length);
 
     // 11 bits
     char name7Bytes[2] = { buffer[13], buffer[12] };
-    short name7Length = (*((short*)name7Bytes) >> 5) & 0b11111111111;
-    fprintf(f, "name7Length = %hi\n", name7Length);
+    unsigned short name7Length = (*((unsigned short*)name7Bytes) >> 5) & 0b11111111111;
+    fprintf(f, "name7Length = %hu\n", name7Length);
 
     // 11 bits
     char name8Bytes[2] = { buffer[14], buffer[13] };
-    short name8Length = (*((short*)name8Bytes) >> 2) & 0b11111111111;
-    fprintf(f, "name8Length = %hi\n", name8Length);
+    unsigned short name8Length = (*((unsigned short*)name8Bytes) >> 2) & 0b11111111111;
+    fprintf(f, "name8Length = %hu\n", name8Length);
 
     char* buf = &buffer[15];
-    std::string name;
-    while (*buf != 0)
+    if (nameLength)
     {
-        name += *buf;
-        buf++;
+        std::string name;
+        for (unsigned int i = 0; i < nameLength; i++)
+        {
+            name += *buf;
+            buf++;
+        }
+        fprintf(f, "name = %s\n", name.c_str());
     }
-    fprintf(f, "name = %s\n", name.c_str());
-    buf++;
+
+    if (name2Length)
+    {
+        std::string name2;
+        for (unsigned int i = 0; i < name2Length; i++)
+        {
+            name2 += *buf;
+            buf++;
+        }
+        fprintf(f, "name2 = %s\n", name2.c_str());
+    }
+
+    if (name3Length)
+    {
+        std::string name3;
+        for (unsigned int i = 0; i < name3Length; i++)
+        {
+            name3 += *buf;
+            buf++;
+        }
+        fprintf(f, "name3 = %s\n", name3.c_str());
+    }
+
+    if (name4Length)
+    {
+        std::string name4;
+        for (unsigned int i = 0; i < name4Length; i++)
+        {
+            name4 += *buf;
+            buf++;
+        }
+        fprintf(f, "name4 = %s\n", name4.c_str());
+    }
+
+    if (name5Length)
+    {
+        std::string name5;
+        for (unsigned int i = 0; i < name5Length; i++)
+        {
+            name5 += *buf;
+            buf++;
+        }
+        fprintf(f, "name5 = %s\n", name5.c_str());
+    }
+
+    if (name6Length)
+    {
+        std::string name6;
+        for (unsigned int i = 0; i < name6Length; i++)
+        {
+            name6 += *buf;
+            buf++;
+        }
+        fprintf(f, "name6 = %s\n", name6.c_str());
+    }
+
+    if (name7Length)
+    {
+        std::string name7;
+        for (unsigned int i = 0; i < name7Length; i++)
+        {
+            name7 += *buf;
+            buf++;
+        }
+        fprintf(f, "name7 = %s\n", name7.c_str());
+    }
+
+    if (name8Length)
+    {
+        std::string name8;
+        for (unsigned int i = 0; i < name8Length; i++)
+        {
+            name8 += *buf;
+            buf++;
+        }
+        fprintf(f, "name8 = %s\n", name8.c_str());
+    }
 
     unsigned int typeFlags = *((unsigned int*)buf);
     fprintf(f, "typeFlags = %u\n", typeFlags);
@@ -211,7 +290,7 @@ void ReadCreatureEntry(FILE*& pFile)
     }
 
     int remainingBytes = recordSize - (buf - buffer);
-    fprintf(f, "remaining bytes: %u\n", remainingBytes);
+    fprintf(f, "remaining bytes: %i\n", remainingBytes);
     for (int i = 0; i < remainingBytes; i++)
     {
         fprintf(f, "remainingByte[%i] = %hhu\n", i, *(buf++));
@@ -302,7 +381,7 @@ void ReadGameObjectEntry(FILE*& pFile)
     buf += 4;
 
     int remainingBytes = recordSize - (buf - buffer);
-    fprintf(f, "remaining bytes: %u\n", remainingBytes);
+    fprintf(f, "remaining bytes: %i\n", remainingBytes);
     for (int i = 0; i < remainingBytes; i++)
     {
         fprintf(f, "remainingByte[%i] = %hhu\n", i, *(buf++));
@@ -620,7 +699,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     logTitleLengthBytes[0] = *buf;
     unsigned short logTitleLength = (*((unsigned short*)logTitleLengthBytes) >> 7) & 0b111111111;
-    fprintf(f, "logTitleLength = %hi\n", logTitleLength);
+    fprintf(f, "logTitleLength = %hu\n", logTitleLength);
     
     // 12 bits
     char logDescriptionLengthBytes[2];
@@ -628,7 +707,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     logDescriptionLengthBytes[0] = *buf;
     unsigned short logDescriptionLength = (*((unsigned short*)logDescriptionLengthBytes) >> 3) & 0b111111111111;
-    fprintf(f, "logDescriptionLength = %hi\n", logDescriptionLength);
+    fprintf(f, "logDescriptionLength = %hu\n", logDescriptionLength);
     
     // 12 bits
     char questDescriptionLengthBytes[4];
@@ -647,7 +726,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     areaDescriptionLengthBytes[0] = *buf;
     unsigned short areaDescriptionLength = (*((unsigned short*)areaDescriptionLengthBytes) >> 6) & 0b111111111;
-    fprintf(f, "areaDescriptionLength = %hi\n", areaDescriptionLength);
+    fprintf(f, "areaDescriptionLength = %hu\n", areaDescriptionLength);
     
     // 10 bits
     char portraitGiverTextLengthBytes[2];
@@ -655,7 +734,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     portraitGiverTextLengthBytes[0] = *buf;
     unsigned short portraitGiverTextLength = (*((unsigned short*)portraitGiverTextLengthBytes) >> 4) & 0b1111111111;
-    fprintf(f, "portraitGiverTextLength = %hi\n", portraitGiverTextLength);
+    fprintf(f, "portraitGiverTextLength = %hu\n", portraitGiverTextLength);
     
     // 8 bits
     char portraitGiverNameLengthBytes[2];
@@ -663,7 +742,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     portraitGiverNameLengthBytes[0] = *buf;
     unsigned short portraitGiverNameLength = (*((unsigned short*)portraitGiverNameLengthBytes) >> 4) & 0b11111111;
-    fprintf(f, "portraitGiverNameLength = %hi\n", portraitGiverNameLength);
+    fprintf(f, "portraitGiverNameLength = %hu\n", portraitGiverNameLength);
     
     // 10 bits
     char portraitTurnInTextLengthBytes[2];
@@ -671,7 +750,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     portraitTurnInTextLengthBytes[0] = *buf;
     unsigned short portraitTurnInTextLength = (*((unsigned short*)portraitTurnInTextLengthBytes) >> 2) & 0b1111111111;
-    fprintf(f, "portraitTurnInTextLength = %hi\n", portraitTurnInTextLength);
+    fprintf(f, "portraitTurnInTextLength = %hu\n", portraitTurnInTextLength);
     
     // 8 bits
     char portraitTurnInNameLengthBytes[2];
@@ -679,7 +758,7 @@ void ReadQuestEntry(FILE*& pFile)
     buf++;
     portraitTurnInNameLengthBytes[0] = *buf;
     unsigned short portraitTurnInNameLength = (*((unsigned short*)portraitTurnInNameLengthBytes) >> 2) & 0b11111111;
-    fprintf(f, "portraitTurnInNameLength = %hi\n", portraitTurnInNameLength);
+    fprintf(f, "portraitTurnInNameLength = %hu\n", portraitTurnInNameLength);
     
     // 11 bits
     char questCompletionLogLengthBytes[4];
@@ -853,6 +932,76 @@ void ReadQuestEntry(FILE*& pFile)
     fclose(f);
 }
 
+void ReadPageTextEntry(FILE*& pFile)
+{
+    g_counter++;
+    std::string const filename = std::string("pagetext") + std::to_string(g_counter) + std::string(".txt");
+    FILE* f = fopen(filename.c_str(), "w");
+    if (f == nullptr)
+    {
+        printf("Error creating file!\n");
+        exit(1);
+    }
+
+    unsigned int entry = 0;
+    fread(&entry, sizeof(unsigned int), 1, pFile);
+    fprintf(f, "entry = %u\n", entry);
+
+    unsigned int recordSize = 0;
+    fread(&recordSize, sizeof(unsigned int), 1, pFile);
+    fprintf(f, "recordSize = %u\n", recordSize);
+
+    char* buffer = new char[recordSize];
+    fread(buffer, sizeof(char) * recordSize, 1, pFile);
+
+    char* buf = buffer;
+
+    unsigned int pageId = *((unsigned int*)buf);
+    fprintf(f, "pageId = %u\n", pageId);
+    buf += 4;
+
+    unsigned int nextPageId = *((unsigned int*)buf);
+    fprintf(f, "nextPageId = %u\n", nextPageId);
+    buf += 4;
+
+    unsigned int playerConditionId = *((unsigned int*)buf);
+    fprintf(f, "playerConditionId = %u\n", playerConditionId);
+    buf += 4;
+
+    char flags = *((char*)buf);
+    fprintf(f, "flags = %hhu\n", flags);
+    buf += 1;
+
+    char textLengthByte1 = *((char*)buf);
+    buf += 1;
+    char textLengthByte2 = *((char*)buf);
+    buf += 1;
+    char textLengthBytes[2] = { textLengthByte2 , textLengthByte1 };
+    unsigned short textLength = (*((unsigned short*)textLengthBytes) >> 4);
+    fprintf(f, "textLength = %hu\n", textLength);
+
+    if (textLength)
+    {
+        std::string text;
+        for (unsigned int i = 0; i < textLength; i++)
+        {
+            text += *buf;
+            buf++;
+        }
+        fprintf(f, "text = %s\n", text.c_str());
+    }
+
+    int remainingBytes = recordSize - (buf - buffer);
+    fprintf(f, "remaining bytes: %i\n", remainingBytes);
+    for (int i = 0; i < remainingBytes; i++)
+    {
+        fprintf(f, "remainingByte[%i] = %hhu\n", i, *(buf++));
+    }
+
+    delete[] buffer;
+    fclose(f);
+}
+
 template <typename T>
 void ReverseArray(T arr[], size_t size)
 {
@@ -869,6 +1018,7 @@ enum
     CREATURE_CACHE,
     GAMEOBJECT_CACHE,
     QUEST_CACHE,
+    PAGETEXT_CACHE,
 };
 
 int main()
@@ -877,6 +1027,7 @@ int main()
     printf("1. creaturecache.wdb\n");
     printf("2. gameobjectcache.wdb\n");
     printf("3. questcache.wdb\n");
+    printf("4. pagetextcache.wdb\n");
     printf("> ");
 
     unsigned int option = 0;
@@ -900,6 +1051,12 @@ int main()
         {
             option = QUEST_CACHE;
             fileName = "questcache.wdb";
+            break;
+        }
+        case '4':
+        {
+            option = PAGETEXT_CACHE;
+            fileName = "pagetextcache.wdb";
             break;
         }
         default:
@@ -960,6 +1117,9 @@ int main()
                 break;
             case QUEST_CACHE:
                 ReadQuestEntry(pFile);
+                break;
+            case PAGETEXT_CACHE:
+                ReadPageTextEntry(pFile);
                 break;
         }
     }

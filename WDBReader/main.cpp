@@ -1,5 +1,15 @@
+#include "Defines.h"
+#include "GameObject.h"
 #include "stdio.h"
 #include <string>
+#include <vector>
+
+enum
+{
+    WRITE_NONE,
+    WRITE_AS_TEXT,
+    WRITE_AS_SQL,
+};
 
 unsigned int g_counter = 0;
 
@@ -300,95 +310,65 @@ void ReadCreatureEntry(FILE*& pFile)
     fclose(f);
 }
 
+std::vector<GameObject> vGameObjects;
+
 void ReadGameObjectEntry(FILE*& pFile)
 {
     g_counter++;
-    std::string const filename = std::string("gameobject") + std::to_string(g_counter) + std::string(".txt");
-    FILE* f = fopen(filename.c_str(), "w");
-    if (f == nullptr)
+    GameObject goEntry;
+    goEntry.ReadEntry(pFile);
+    vGameObjects.push_back(goEntry);
+}
+
+void WriteGameObjects()
+{
+    if (vGameObjects.empty())
+        printf("No objects to write!\n");
+
+    printf("\nSelect output method:\n");
+    printf("1. Text\n");
+    printf("2. SQL\n");
+    printf("> ");
+
+    fseek(stdin, 0, SEEK_END);
+    char option = getchar() - '0';
+
+    switch (option)
     {
-        printf("Error creating file!\n");
-        exit(1);
-    }
-
-    unsigned int entry = 0;
-    fread(&entry, sizeof(unsigned int), 1, pFile);
-    fprintf(f, "entry = %u\n", entry);
-
-    unsigned int recordSize = 0;
-    fread(&recordSize, sizeof(unsigned int), 1, pFile);
-    fprintf(f, "recordSize = %u\n", recordSize);
-
-    char* buffer = new char[recordSize];
-    fread(buffer, sizeof(char) * recordSize, 1, pFile);
-
-    char* buf = buffer;
-
-    unsigned int type = *((unsigned int*)buf);
-    fprintf(f, "type = %u\n", type);
-    buf += 4;
-
-    unsigned int displayId = *((unsigned int*)buf);
-    fprintf(f, "displayId = %u\n", displayId);
-    buf += 4;
-
-    for (int i = 1; i <= 4; i++)
-    {
-        std::string name;
-        while (*buf != 0)
+        case WRITE_AS_TEXT:
         {
-            name += *buf;
-            buf++;
+            for (uint32 i = 0; i < vGameObjects.size(); i++)
+            {
+                std::string const filename = std::string("gameobject") + std::to_string(i) + std::string(".txt");
+                FILE* f = fopen(filename.c_str(), "w");
+                if (f == nullptr)
+                {
+                    printf("Error creating file!\n");
+                    exit(1);
+                }
+
+                fclose(f);
+            }
+            break;
         }
-        fprintf(f, "name[%i] = %s\n", i, name.c_str());
-        buf++;
-    }
-    
-    for (int i = 1; i <= 3; i++)
-    {
-        std::string unkString;
-        while (*buf != 0)
+        case WRITE_AS_SQL:
         {
-            unkString += *buf;
-            buf++;
+            FILE* f = fopen("gameobject_template.sql", "w");
+            fprintf(f, "REPLACE INTO `gameobject_template` (`entry`, `type`, `display_id`, `scale`, `required_level`, `name1`, `name2`, `name3`, `name4`, `unk_string1`, `unk_string2`, `unk_string3`, `data0`, `data1`, `data2`, `data3`, `data4`, `data5`, `data6`, `data7`, `data8`, `data9`, `data10`, `data11`, `data12`, `data13`, `data14`, `data15`, `data16`, `data17`, `data18`, `data19`, `data20`, `data21`, `data22`, `data23`, `data24`, `data25`, `data26`, `data27`, `data28`, `data29`, `data30`, `data31`, `data32`, `data33`, `quest_item1`, `quest_item2`, `quest_item3`) VALUES \n");
+            uint32 count = 0;
+            for (auto const& goEntry : vGameObjects)
+            {
+                count++;
+                if (count > 1)
+                    fprintf(f, ",\n");
+
+                goEntry.WriteAsSQL(f);
+            }
+            fprintf(f, ";\n");
+            fclose(f);
+            break;
         }
-        fprintf(f, "unkString[%i] = %s\n", i, unkString.c_str());
-        buf++;
     }
-
-    for (int i = 0; i < 34; i++)
-    {
-        unsigned int data = *((unsigned int*)buf);
-        fprintf(f, "data[%i] = %u\n", i, data);
-        buf += 4;
-    }
-
-    float scale = *((float*)buf);
-    fprintf(f, "scale = %f\n", scale);
-    buf += 4;
-
-    unsigned char questItemsCount = *(buf++);
-    fprintf(f, "questItemsCount = %hhu\n", questItemsCount);
-    for (unsigned char i = 0; i < questItemsCount; i++)
-    {
-        unsigned int questItem = *((unsigned int*)buf);
-        fprintf(f, "questItem[%hhu] = %u\n", i, questItem);
-        buf += 4;
-    }
-
-    unsigned int requiredLevel = *((unsigned int*)buf);
-    fprintf(f, "requiredLevel = %u\n", requiredLevel);
-    buf += 4;
-
-    int remainingBytes = recordSize - (buf - buffer);
-    fprintf(f, "remaining bytes: %i\n", remainingBytes);
-    for (int i = 0; i < remainingBytes; i++)
-    {
-        fprintf(f, "remainingByte[%i] = %hhu\n", i, *(buf++));
-    }
-
-    delete[] buffer;
-    fclose(f);
 }
 
 void ReadQuestEntry(FILE*& pFile)
@@ -1126,6 +1106,24 @@ int main()
 
     printf("\nDone!\n");
     printf("Records read: %u\n", g_counter);
+
+    switch (option)
+    {
+        case CREATURE_CACHE:
+            //ReadCreatureEntry(pFile);
+            break;
+        case GAMEOBJECT_CACHE:
+            WriteGameObjects();
+            break;
+        case QUEST_CACHE:
+            //ReadQuestEntry(pFile);
+            break;
+        case PAGETEXT_CACHE:
+            //ReadPageTextEntry(pFile);
+            break;
+    }
+    
+    printf("\nData has been exported!\n");
 
     fseek(stdin, 0, SEEK_END);
     getchar();

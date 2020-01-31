@@ -1,5 +1,7 @@
 #include "Defines.h"
 #include "GameObject.h"
+#include "NpcText.h"
+#include "PageText.h"
 #include "stdio.h"
 #include <string>
 #include <vector>
@@ -347,6 +349,7 @@ void WriteGameObjects()
                     exit(1);
                 }
 
+                vGameObjects[i].WriteAsText(f);
                 fclose(f);
             }
             break;
@@ -363,6 +366,130 @@ void WriteGameObjects()
                     fprintf(f, ",\n");
 
                 goEntry.WriteAsSQL(f);
+            }
+            fprintf(f, ";\n");
+            fclose(f);
+            break;
+        }
+    }
+}
+
+std::vector<NpcText> vNpcTexts;
+
+void ReadNpcTextEntry(FILE*& pFile)
+{
+    g_counter++;
+    NpcText npcTextEntry;
+    npcTextEntry.ReadEntry(pFile);
+    vNpcTexts.push_back(npcTextEntry);
+}
+
+void WriteNpcTexts()
+{
+    if (vNpcTexts.empty())
+        printf("No npc texts to write!\n");
+
+    printf("\nSelect output method:\n");
+    printf("1. Text\n");
+    printf("2. SQL\n");
+    printf("> ");
+
+    fseek(stdin, 0, SEEK_END);
+    char option = getchar() - '0';
+
+    switch (option)
+    {
+        case WRITE_AS_TEXT:
+        {
+            for (uint32 i = 0; i < vNpcTexts.size(); i++)
+            {
+                std::string const filename = std::string("npctext") + std::to_string(i) + std::string(".txt");
+                FILE* f = fopen(filename.c_str(), "w");
+                if (f == nullptr)
+                {
+                    printf("Error creating file!\n");
+                    exit(1);
+                }
+
+                vNpcTexts[i].WriteAsText(f);
+                fclose(f);
+            }
+            break;
+        }
+        case WRITE_AS_SQL:
+        {
+            FILE* f = fopen("npc_text.sql", "w");
+            fprintf(f, "REPLACE INTO `npc_text` (`ID`, `Probability0`, `Probability1`, `Probability2`, `Probability3`, `Probability4`, `Probability5`, `Probability6`, `Probability7`, `BroadcastTextID0`, `BroadcastTextID1`, `BroadcastTextID2`, `BroadcastTextID3`, `BroadcastTextID4`, `BroadcastTextID5`, `BroadcastTextID6`, `BroadcastTextID7`) VALUES \n");
+            uint32 count = 0;
+            for (auto const& npcTextEntry : vNpcTexts)
+            {
+                count++;
+                if (count > 1)
+                    fprintf(f, ",\n");
+
+                npcTextEntry.WriteAsSQL(f);
+            }
+            fprintf(f, ";\n");
+            fclose(f);
+            break;
+        }
+    }
+}
+
+std::vector<PageText> vPageTexts;
+
+void ReadPageTextEntry(FILE*& pFile)
+{
+    g_counter++;
+    PageText pageTextEntry;
+    pageTextEntry.ReadEntry(pFile);
+    vPageTexts.push_back(pageTextEntry);
+}
+
+void WritePageTexts()
+{
+    if (vPageTexts.empty())
+        printf("No page texts to write!\n");
+
+    printf("\nSelect output method:\n");
+    printf("1. Text\n");
+    printf("2. SQL\n");
+    printf("> ");
+
+    fseek(stdin, 0, SEEK_END);
+    char option = getchar() - '0';
+
+    switch (option)
+    {
+        case WRITE_AS_TEXT:
+        {
+            for (uint32 i = 0; i < vPageTexts.size(); i++)
+            {
+                std::string const filename = std::string("pagetext") + std::to_string(i) + std::string(".txt");
+                FILE* f = fopen(filename.c_str(), "w");
+                if (f == nullptr)
+                {
+                    printf("Error creating file!\n");
+                    exit(1);
+                }
+
+                vPageTexts[i].WriteAsText(f);
+                fclose(f);
+            }
+            break;
+        }
+        case WRITE_AS_SQL:
+        {
+            FILE* f = fopen("page_text.sql", "w");
+            fprintf(f, "REPLACE INTO `page_text` (`Entry`, `NextPageId`, `PlayerConditionId`, `Flags`, `Text`) VALUES \n");
+            uint32 count = 0;
+            for (auto const& pageTextEntry : vPageTexts)
+            {
+                count++;
+                if (count > 1)
+                    fprintf(f, ",\n");
+
+                pageTextEntry.WriteAsSQL(f);
             }
             fprintf(f, ";\n");
             fclose(f);
@@ -912,76 +1039,6 @@ void ReadQuestEntry(FILE*& pFile)
     fclose(f);
 }
 
-void ReadPageTextEntry(FILE*& pFile)
-{
-    g_counter++;
-    std::string const filename = std::string("pagetext") + std::to_string(g_counter) + std::string(".txt");
-    FILE* f = fopen(filename.c_str(), "w");
-    if (f == nullptr)
-    {
-        printf("Error creating file!\n");
-        exit(1);
-    }
-
-    unsigned int entry = 0;
-    fread(&entry, sizeof(unsigned int), 1, pFile);
-    fprintf(f, "entry = %u\n", entry);
-
-    unsigned int recordSize = 0;
-    fread(&recordSize, sizeof(unsigned int), 1, pFile);
-    fprintf(f, "recordSize = %u\n", recordSize);
-
-    char* buffer = new char[recordSize];
-    fread(buffer, sizeof(char) * recordSize, 1, pFile);
-
-    char* buf = buffer;
-
-    unsigned int pageId = *((unsigned int*)buf);
-    fprintf(f, "pageId = %u\n", pageId);
-    buf += 4;
-
-    unsigned int nextPageId = *((unsigned int*)buf);
-    fprintf(f, "nextPageId = %u\n", nextPageId);
-    buf += 4;
-
-    unsigned int playerConditionId = *((unsigned int*)buf);
-    fprintf(f, "playerConditionId = %u\n", playerConditionId);
-    buf += 4;
-
-    char flags = *((char*)buf);
-    fprintf(f, "flags = %hhu\n", flags);
-    buf += 1;
-
-    char textLengthByte1 = *((char*)buf);
-    buf += 1;
-    char textLengthByte2 = *((char*)buf);
-    buf += 1;
-    char textLengthBytes[2] = { textLengthByte2 , textLengthByte1 };
-    unsigned short textLength = (*((unsigned short*)textLengthBytes) >> 4);
-    fprintf(f, "textLength = %hu\n", textLength);
-
-    if (textLength)
-    {
-        std::string text;
-        for (unsigned int i = 0; i < textLength; i++)
-        {
-            text += *buf;
-            buf++;
-        }
-        fprintf(f, "text = %s\n", text.c_str());
-    }
-
-    int remainingBytes = recordSize - (buf - buffer);
-    fprintf(f, "remaining bytes: %i\n", remainingBytes);
-    for (int i = 0; i < remainingBytes; i++)
-    {
-        fprintf(f, "remainingByte[%i] = %hhu\n", i, *(buf++));
-    }
-
-    delete[] buffer;
-    fclose(f);
-}
-
 template <typename T>
 void ReverseArray(T arr[], size_t size)
 {
@@ -999,6 +1056,7 @@ enum
     GAMEOBJECT_CACHE,
     QUEST_CACHE,
     PAGETEXT_CACHE,
+    NPCTEXT_CACHE,
 };
 
 int main()
@@ -1008,6 +1066,7 @@ int main()
     printf("2. gameobjectcache.wdb\n");
     printf("3. questcache.wdb\n");
     printf("4. pagetextcache.wdb\n");
+    printf("5. npccache.wdb\n");
     printf("> ");
 
     unsigned int option = 0;
@@ -1037,6 +1096,12 @@ int main()
         {
             option = PAGETEXT_CACHE;
             fileName = "pagetextcache.wdb";
+            break;
+        }
+        case '5':
+        {
+            option = NPCTEXT_CACHE;
+            fileName = "npccache.wdb";
             break;
         }
         default:
@@ -1101,6 +1166,9 @@ int main()
             case PAGETEXT_CACHE:
                 ReadPageTextEntry(pFile);
                 break;
+            case NPCTEXT_CACHE:
+                ReadNpcTextEntry(pFile);
+                break;
         }
     }
 
@@ -1119,7 +1187,10 @@ int main()
             //ReadQuestEntry(pFile);
             break;
         case PAGETEXT_CACHE:
-            //ReadPageTextEntry(pFile);
+            WritePageTexts();
+            break;
+        case NPCTEXT_CACHE:
+            WriteNpcTexts();
             break;
     }
     

@@ -29,5 +29,11 @@
     <ClInclude Include="GameObject.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="NpcText.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PageText.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

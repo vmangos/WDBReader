@@ -121,7 +121,11 @@ struct GameObject
 
         for (int i = 0; i < 34; i++)
         {
-            fprintf(f, "data[%i] = %u\n", i, data[i]);
+            // data1 and data6 are signed
+            if (i == 1 || i == 6)
+                fprintf(f, "data[%i] = %i\n", i, (int32)data[i]);
+            else
+                fprintf(f, "data[%i] = %u\n", i, data[i]);
         }
 
         fprintf(f, "questItemsCount = %u\n", questItem.size());
@@ -149,7 +153,11 @@ struct GameObject
 
         for (int i = 0; i < 34; i++)
         {
-            fprintf(f, ", %u", data[i]);
+            // data1 and data6 are signed
+            if (i == 1 || i == 6)
+                fprintf(f, ", %i", (int32)data[i]);
+            else
+                fprintf(f, ", %u", data[i]);
         }
 
         for (uint32 itemId : questItem)

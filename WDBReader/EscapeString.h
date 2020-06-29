@@ -123,4 +123,4 @@ std::string EscapeString(std::string unescapedString)
     return returnString;
 }
 
-#endif;
+#endif

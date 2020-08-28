@@ -22,6 +22,7 @@
 
 #include "Defines.h"
 #include <string>
+#include <cstring>
 
 size_t escape_string_for_mysql(char *to,
     size_t to_length, const char *from,
@@ -123,4 +124,4 @@ std::string EscapeString(std::string unescapedString)
     return returnString;
 }
 
-#endif;
+#endif

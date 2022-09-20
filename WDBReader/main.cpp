@@ -270,6 +270,16 @@ void ReadCreatureEntry(FILE*& pFile)
     fprintf(f, "unitClass = %u\n", unitClass);
     buf += 4;
 
+    unsigned int unknown1 = *((unsigned int*)buf);
+    fprintf(f, "unknown1 = %u\n", unknown1);
+    buf += 4;
+    unsigned int unknown2 = *((unsigned int*)buf);
+    fprintf(f, "unknown2 = %u\n", unknown2);
+    buf += 4;
+    unsigned int unknown3 = *((unsigned int*)buf);
+    fprintf(f, "unknown3 = %u\n", unknown3);
+    buf += 4;
+
     if (titleLength)
     {
         std::string subname;
@@ -726,6 +736,10 @@ void ReadQuestEntry(FILE*& pFile)
 
     unsigned int portraitTurnInDisplayID = *((unsigned int*)buf);
     fprintf(f, "portraitTurnInDisplayID  = %u\n", portraitTurnInDisplayID);
+    buf += 4;
+
+    unsigned int unknown = *((unsigned int*)buf);
+    fprintf(f, "unknown = %u\n", unknown);
     buf += 4;
 
     struct {

@@ -18,6 +18,7 @@ struct GameObject
     std::array<uint32, 34> data = {};
     float scale = 0.0f;
     std::array<uint32, MAX_QUEST_ITEMS> questItem = {};
+    uint32 unknown = 0;
     uint32 requiredLevel = 0;
 
     void ReadEntry(FILE*& pFile)
@@ -84,6 +85,9 @@ struct GameObject
             questItem[i] = questItemId;
             buf += 4;
         }
+
+        unknown = *((unsigned int*)buf);
+        buf += 4;
 
         requiredLevel = *((unsigned int*)buf);
         buf += 4;

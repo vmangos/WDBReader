@@ -179,7 +179,8 @@ struct Item
         buffer >> block;
         buffer >> itemSet;
         buffer >> maxDurability;
-        buffer >> areaBound;
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
+            buffer >> areaBound;
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
             buffer >> mapBound;
         if (g_clientBuild >= CLIENT_BUILD_1_9_0)
@@ -268,7 +269,8 @@ struct Item
         fprintf(f, ", %u", block);
         fprintf(f, ", %u", itemSet);
         fprintf(f, ", %u", maxDurability);
-        fprintf(f, ", %u", areaBound);
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
+            fprintf(f, ", %u", areaBound);
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
             fprintf(f, ", %u", mapBound);
         if (g_clientBuild >= CLIENT_BUILD_1_9_0)
@@ -348,7 +350,8 @@ struct Item
         fprintf(f, ", `block`");
         fprintf(f, ", `set_id`");
         fprintf(f, ", `max_durability`");
-        fprintf(f, ", `area_bound`");
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
+            fprintf(f, ", `area_bound`");
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
             fprintf(f, ", `map_bound`");
         if (g_clientBuild >= CLIENT_BUILD_1_9_0)

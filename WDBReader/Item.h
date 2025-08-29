@@ -243,7 +243,7 @@ struct Item
         fprintf(f, ", %u", delay);
         fprintf(f, ", %u", ammoType);
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
-            fprintf(f, ", %u", rangedModRange);
+            fprintf(f, ", %g", rangedModRange);
 
         for (auto& i : itemSpells)
         {

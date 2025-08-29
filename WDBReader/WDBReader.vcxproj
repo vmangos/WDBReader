@@ -145,11 +145,17 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ByteBuffer.h" />
+    <ClInclude Include="ByteConverter.h" />
+    <ClInclude Include="ClientBuilds.h" />
+    <ClInclude Include="Creature.h" />
     <ClInclude Include="Defines.h" />
     <ClInclude Include="EscapeString.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Item.h" />
     <ClInclude Include="NpcText.h" />
     <ClInclude Include="PageText.h" />
+    <ClInclude Include="Quest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -35,5 +35,23 @@
     <ClInclude Include="PageText.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="ClientBuilds.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteBuffer.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ByteConverter.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Creature.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Quest.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -56,7 +56,7 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             buffer >> civilian;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             buffer >> leader;
 
         return true;
@@ -89,7 +89,7 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", %u", (uint32)civilian);
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", %u", (uint32)leader);
 
         fprintf(f, ")");
@@ -123,7 +123,7 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", `civilian`");
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", `leader`");
 
         fprintf(f, ") VALUES\n");

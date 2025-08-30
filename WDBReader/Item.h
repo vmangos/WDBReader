@@ -25,7 +25,7 @@ struct Item
     int32 allowableClass = 0;
     int32 allowableRace = 0;
     uint32 itemLevel = 0;
-    uint32 requiredLevel = 0;
+    int32 requiredLevel = 0;
     uint32 requiredSkill = 0;
     uint32 requiredSkillRank = 0;
     uint32 requiredSpell = 0;
@@ -62,6 +62,7 @@ struct Item
 
     uint32 delay = 0;
     uint32 ammoType = 0;
+    uint32 unk1 = 0;
     float rangedModRange;
 
     struct ItemSpell
@@ -84,7 +85,7 @@ struct Item
     uint32 lockId = 0;
     int32 material = 0;
     uint32 sheath = 0;
-    uint32 randomProperty = 0;
+    int32 randomProperty = 0;
     uint32 block = 0;
     uint32 itemSet = 0;
     uint32 maxDurability = 0;
@@ -122,13 +123,17 @@ struct Item
         buffer >> requiredLevel;
         buffer >> requiredSkill;
         buffer >> requiredSkillRank;
-        buffer >> requiredSpell;
-        buffer >> requiredHonorRank;
-        buffer >> requiredCityRank;
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            buffer >> requiredSpell;
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            buffer >> requiredHonorRank;
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            buffer >> requiredCityRank;
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             buffer >> requiredReputationFaction;
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             buffer >> requiredReputationRank;
+        
         buffer >> maxCount;
         buffer >> stackable;
         buffer >> containerSlots;
@@ -139,8 +144,19 @@ struct Item
         }
         for (auto& i : itemDamages)
         {
-            buffer >> i.damageMin;
-            buffer >> i.damageMax;
+            if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            {
+                buffer >> i.damageMin;
+                buffer >> i.damageMax;
+            }
+            else
+            {
+                int32 dmg;
+                buffer >> dmg;
+                i.damageMin = dmg;
+                buffer >> dmg;
+                i.damageMax = dmg;
+            }
             buffer >> i.damageType;
         }
         buffer >> armor;
@@ -149,10 +165,15 @@ struct Item
         buffer >> natureRes;
         buffer >> frostRes;
         buffer >> shadowRes;
-        buffer >> arcaneRes;
+        if (g_clientBuild >= CLIENT_BUILD_0_9_0)
+            buffer >> arcaneRes;
 
         buffer >> delay;
         buffer >> ammoType;
+
+        if (g_clientBuild < CLIENT_BUILD_0_10_0)
+            buffer >> unk1;
+
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             buffer >> rangedModRange;
 
@@ -175,10 +196,14 @@ struct Item
         buffer >> lockId;
         buffer >> material;
         buffer >> sheath;
-        buffer >> randomProperty;
-        buffer >> block;
-        buffer >> itemSet;
-        buffer >> maxDurability;
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            buffer >> randomProperty;
+        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+            buffer >> block;
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            buffer >> itemSet;
+        if (g_clientBuild >= CLIENT_BUILD_0_12_0)
+            buffer >> maxDurability;
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             buffer >> areaBound;
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
@@ -207,16 +232,20 @@ struct Item
         fprintf(f, ", %i", allowableClass);
         fprintf(f, ", %i", allowableRace);
         fprintf(f, ", %u", itemLevel);
-        fprintf(f, ", %u", requiredLevel);
+        fprintf(f, ", %i", requiredLevel);
         fprintf(f, ", %u", requiredSkill);
         fprintf(f, ", %u", requiredSkillRank);
-        fprintf(f, ", %u", requiredSpell);
-        fprintf(f, ", %u", requiredHonorRank);
-        fprintf(f, ", %u", requiredCityRank);
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", %u", requiredSpell);
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", %u", requiredHonorRank);
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", %u", requiredCityRank);
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", %u", requiredReputationFaction);
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", %u", requiredReputationRank);
+
         fprintf(f, ", %u", maxCount);
         fprintf(f, ", %u", stackable);
         fprintf(f, ", %u", containerSlots);
@@ -239,10 +268,13 @@ struct Item
         fprintf(f, ", %i", natureRes);
         fprintf(f, ", %i", frostRes);
         fprintf(f, ", %i", shadowRes);
-        fprintf(f, ", %i", arcaneRes);
+        if (g_clientBuild >= CLIENT_BUILD_0_9_0)
+            fprintf(f, ", %i", arcaneRes);
 
         fprintf(f, ", %u", delay);
         fprintf(f, ", %u", ammoType);
+        if (g_clientBuild < CLIENT_BUILD_0_10_0)
+            fprintf(f, ", %u", unk1);
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             fprintf(f, ", %g", rangedModRange);
 
@@ -265,10 +297,14 @@ struct Item
         fprintf(f, ", %u", lockId);
         fprintf(f, ", %i", material);
         fprintf(f, ", %u", sheath);
-        fprintf(f, ", %u", randomProperty);
-        fprintf(f, ", %u", block);
-        fprintf(f, ", %u", itemSet);
-        fprintf(f, ", %u", maxDurability);
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", %i", randomProperty);
+        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+            fprintf(f, ", %u", block);
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", %u", itemSet);
+        if (g_clientBuild >= CLIENT_BUILD_0_12_0)
+            fprintf(f, ", %u", maxDurability);
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", %u", areaBound);
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
@@ -282,7 +318,7 @@ struct Item
     static void WriteToSQL(std::vector<Item> const& vItems)
     {
         FILE* f = fopen("wdb_item_template.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_item_template` (`entry`, `class`, `subclass`, `name`, `name2`, `name3`, `name4`, `subname`");
+        fprintf(f, "REPLACE INTO `wdb_item_template` (`entry`");
 
         fprintf(f, ", `class`");
         fprintf(f, ", `subclass`");
@@ -302,10 +338,13 @@ struct Item
         fprintf(f, ", `required_level`");
         fprintf(f, ", `required_skill`");
         fprintf(f, ", `required_skill_rank`");
-        fprintf(f, ", `required_spell`");
-        fprintf(f, ", `required_honor_rank`");
-        fprintf(f, ", `required_city_rank`");
 
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", `required_spell`");
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", `required_honor_rank`");
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", `required_city_rank`");
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", `required_reputation_faction`");
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
@@ -327,10 +366,13 @@ struct Item
         fprintf(f, ", `nature_res`");
         fprintf(f, ", `frost_res`");
         fprintf(f, ", `shadow_res`");
-        fprintf(f, ", `arcane_res`");
+        if (g_clientBuild >= CLIENT_BUILD_0_9_0)
+            fprintf(f, ", `arcane_res`");
 
         fprintf(f, ", `delay`");
         fprintf(f, ", `ammo_type`");
+        if (g_clientBuild < CLIENT_BUILD_0_10_0)
+            fprintf(f, ", `unk1`");
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             fprintf(f, ", `range_mod`");
 
@@ -346,10 +388,14 @@ struct Item
         fprintf(f, ", `lock_id`");
         fprintf(f, ", `material`");
         fprintf(f, ", `sheath`");
-        fprintf(f, ", `random_property`");
-        fprintf(f, ", `block`");
-        fprintf(f, ", `set_id`");
-        fprintf(f, ", `max_durability`");
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", `random_property`");
+        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+            fprintf(f, ", `block`");
+        if (g_clientBuild >= CLIENT_BUILD_0_10_0)
+            fprintf(f, ", `set_id`");
+        if (g_clientBuild >= CLIENT_BUILD_0_12_0)
+            fprintf(f, ", `max_durability`");
         if (g_clientBuild >= CLIENT_BUILD_1_7_0)
             fprintf(f, ", `area_bound`");
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)

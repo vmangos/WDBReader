@@ -20,7 +20,7 @@ struct GameObject
         if (g_clientBuild >= CLIENT_BUILD_1_12_0)
             return 24;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_1_3_0)
             return 16;
 
         return 10;

@@ -64,8 +64,10 @@ struct Quest
         buffer >> zoneOrSort;
         buffer >> type;
 
-        buffer >> repObjectiveFaction;
-        buffer >> repObjectiveValue;
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            buffer >> repObjectiveFaction;
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            buffer >> repObjectiveValue;
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             buffer >> requiredOpositeRepFaction;
@@ -79,9 +81,11 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             buffer >> rewMoneyMaxLevel;
 
-        buffer >> rewSpell;
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            buffer >> rewSpell;
         buffer >> srcItemId;
-        buffer >> questFlags;
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            buffer >> questFlags;
 
         for (int i = 0; i < QUEST_REWARDS_COUNT; ++i)
         {
@@ -125,8 +129,10 @@ struct Quest
         fprintf(f, ", %u", questLevel);
         fprintf(f, ", %i", zoneOrSort);
         fprintf(f, ", %u", type);
-        fprintf(f, ", %u", repObjectiveFaction);
-        fprintf(f, ", %u", repObjectiveValue);
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", %u", repObjectiveFaction);
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", %u", repObjectiveValue);
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", %u", requiredOpositeRepFaction);
@@ -139,9 +145,11 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             fprintf(f, ", %u", rewMoneyMaxLevel);
 
-        fprintf(f, ", %u", rewSpell);
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", %u", rewSpell);
         fprintf(f, ", %u", srcItemId);
-        fprintf(f, ", %u", questFlags);
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", %u", questFlags);
 
         for (int i = 0; i < QUEST_REWARDS_COUNT; ++i)
             fprintf(f, ", %u", rewItemId[i]);
@@ -184,8 +192,10 @@ struct Quest
         fprintf(f, ", `QuestLevel`");
         fprintf(f, ", `ZoneOrSort`");
         fprintf(f, ", `Type`");
-        fprintf(f, ", `RepObjectiveFaction`");
-        fprintf(f, ", `RepObjectiveValue`");
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", `RepObjectiveFaction`");
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", `RepObjectiveValue`");
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", `RequiredOpositeRepFaction`");
@@ -198,9 +208,11 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             fprintf(f, ", `RewMoneyMaxLevel`");
 
-        fprintf(f, ", `RewSpell`");
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", `RewSpell`");
         fprintf(f, ", `SrcItemId`");
-        fprintf(f, ", `QuestFlags`");
+        if (g_clientBuild >= CLIENT_BUILD_0_5_5)
+            fprintf(f, ", `QuestFlags`");
 
         for (int i = 1; i <= QUEST_REWARDS_COUNT; ++i)
             fprintf(f, ", `RewItemId%i`", i);

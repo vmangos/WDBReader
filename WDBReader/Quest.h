@@ -23,7 +23,7 @@ struct Quest
     uint32 requiredOppositeRepFaction = 0;
     uint32 requiredOppositeRepValue = 0;
     uint32 nextQuestInChain = 0;
-    uint32 rewOrReqMoney = 0;
+    int32 rewOrReqMoney = 0;
     uint32 rewMoneyMaxLevel = 0;
     uint32 rewSpell = 0;
     uint32 srcItemId = 0;
@@ -69,10 +69,10 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_0_5_5)
             buffer >> repObjectiveValue;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             buffer >> requiredOppositeRepFaction;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             buffer >> requiredOppositeRepValue;
 
         buffer >> nextQuestInChain;
@@ -134,13 +134,13 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_0_5_5)
             fprintf(f, ", %u", repObjectiveValue);
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", %u", requiredOppositeRepFaction);
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", %u", requiredOppositeRepValue);
 
         fprintf(f, ", %u", nextQuestInChain);
-        fprintf(f, ", %u", rewOrReqMoney);
+        fprintf(f, ", %i", rewOrReqMoney);
 
         if (g_clientBuild >= CLIENT_BUILD_1_10_0)
             fprintf(f, ", %u", rewMoneyMaxLevel);
@@ -206,9 +206,9 @@ struct Quest
         if (g_clientBuild >= CLIENT_BUILD_0_5_5)
             fprintf(f, ", `RepObjectiveValue`");
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", `RequiredOppositeRepFaction`");
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", `RequiredOppositeRepValue`");
 
         fprintf(f, ", `NextQuestInChain`");

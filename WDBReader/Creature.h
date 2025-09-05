@@ -44,13 +44,13 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             buffer >> rank;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             buffer >> unk1;
 
         if (g_clientBuild >= CLIENT_BUILD_1_8_0)
             buffer >> petSpellListId;
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             buffer >> displayId;
 
         if (g_clientBuild >= CLIENT_BUILD_1_5_0)
@@ -77,13 +77,13 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", %u", rank);
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", %u", unk1);
 
         if (g_clientBuild >= CLIENT_BUILD_1_8_0)
             fprintf(f, ", %u", petSpellListId);
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", %u", displayId);
 
         if (g_clientBuild >= CLIENT_BUILD_1_5_0)
@@ -111,13 +111,13 @@ struct Creature
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
             fprintf(f, ", `rank`");
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", `unk1`");
 
         if (g_clientBuild >= CLIENT_BUILD_1_8_0)
             fprintf(f, ", `pet_spell_list_id`");
 
-        if (g_clientBuild >= CLIENT_BUILD_0_6_0)
+        if (g_clientBuild >= CLIENT_BUILD_0_7_0)
             fprintf(f, ", `display_id`");
 
         if (g_clientBuild >= CLIENT_BUILD_1_5_0)

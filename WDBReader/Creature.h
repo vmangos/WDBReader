@@ -64,7 +64,7 @@ struct Creature
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u", entry);
+        fprintf(f, "(%u, %u", entry, g_clientBuild);
 
         for (uint32 i = 0; i < 4; ++i)
             fprintf(f, ", '%s'", EscapeString(name[i]).c_str());
@@ -98,7 +98,7 @@ struct Creature
     static void WriteToSQL(std::vector<Creature> const& vCreatures)
     {
         FILE* f = fopen("wdb_creature_template.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_creature_template` (`entry`, `name`, `name2`, `name3`, `name4`, `subname`");
+        fprintf(f, "REPLACE INTO `wdb_creature_template` (`entry`, `build`, `name`, `name2`, `name3`, `name4`, `subname`");
 
         if (g_clientBuild >= CLIENT_BUILD_1_11_0)
             fprintf(f, ", `type_flags`");

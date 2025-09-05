@@ -56,9 +56,9 @@ struct NpcText
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u", id);
+        fprintf(f, "(%u, %u", id, g_clientBuild);
 
-        for (auto i = 0; i < NPC_TEXT_COUNT; i++)
+        for (int i = 0; i < NPC_TEXT_COUNT; ++i)
         {
             fprintf(f, ", %g", texts[i].probability);
             fprintf(f, ", '%s'", EscapeString(texts[i].maleText).c_str());
@@ -78,11 +78,11 @@ struct NpcText
     static void WriteToSQL(std::vector<NpcText> const& vNpcTexts)
     {
         FILE* f = fopen("wdb_npc_text.sql", "w");
-        fprintf(f, "REPLACE INTO `npc_text` (`id`, ");
+        fprintf(f, "REPLACE INTO `wdb_npc_text` (`id`, `build`");
 
         for (int i = 0; i < NPC_TEXT_COUNT; ++i)
         {
-            fprintf(f, "`probability_%i`, `male_text_%i`, `female_text_%i`, `language_id_%i`, `emote_delay1_%i`, `emote_id1_%i`, `emote_delay2_%i`, `emote_id2_%i`, `emote_delay3_%i`, `emote_id3_%i`", i, i, i, i, i, i, i, i, i, i);
+            fprintf(f, ", `probability_%i`, `male_text_%i`, `female_text_%i`, `language_id_%i`, `emote_delay1_%i`, `emote_id1_%i`, `emote_delay2_%i`, `emote_id2_%i`, `emote_delay3_%i`, `emote_id3_%i`", i, i, i, i, i, i, i, i, i, i);
         }
 
         fprintf(f, ") VALUES\n");

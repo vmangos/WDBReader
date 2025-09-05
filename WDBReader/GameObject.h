@@ -54,7 +54,7 @@ struct GameObject
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u", entry);
+        fprintf(f, "(%u, %u", entry, g_clientBuild);
         fprintf(f, ", %u", type);
         fprintf(f, ", %u", displayId);
 
@@ -73,7 +73,7 @@ struct GameObject
     static void WriteToSQL(std::vector<GameObject> const& vGameObjects)
     {
         FILE* f = fopen("wdb_gameobject_template.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_gameobject_template` (`entry`, `type`, `display_id`, `name`, `name2`, `name3`, `name4`");
+        fprintf(f, "REPLACE INTO `wdb_gameobject_template` (`entry`, `build`, `type`, `display_id`, `name`, `name2`, `name3`, `name4`");
 
         if (g_clientBuild >= CLIENT_BUILD_1_12_0)
             fprintf(f, ", `unk1`");

@@ -216,7 +216,7 @@ struct Item
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u", entry);
+        fprintf(f, "(%u, %u", entry, g_clientBuild);
         fprintf(f, ", %u", itemClass);
         fprintf(f, ", %u", subClass);
 
@@ -318,7 +318,7 @@ struct Item
     static void WriteToSQL(std::vector<Item> const& vItems)
     {
         FILE* f = fopen("wdb_item_template.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_item_template` (`entry`");
+        fprintf(f, "REPLACE INTO `wdb_item_template` (`entry`, `build`");
 
         fprintf(f, ", `class`");
         fprintf(f, ", `subclass`");

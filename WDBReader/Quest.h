@@ -20,8 +20,8 @@ struct Quest
     uint32 type = 0;
     uint32 repObjectiveFaction = 0;
     uint32 repObjectiveValue = 0;
-    uint32 requiredOpositeRepFaction = 0;
-    uint32 requiredOpositeRepValue = 0;
+    uint32 requiredOppositeRepFaction = 0;
+    uint32 requiredOppositeRepValue = 0;
     uint32 nextQuestInChain = 0;
     uint32 rewOrReqMoney = 0;
     uint32 rewMoneyMaxLevel = 0;
@@ -40,7 +40,7 @@ struct Quest
     std::string objectives;
     std::string details;
     std::string endText;
-    uint32 reqCreatureOrGOId[QUEST_OBJECTIVES_COUNT] = {};
+    int32 reqCreatureOrGOId[QUEST_OBJECTIVES_COUNT] = {};
     uint32 reqCreatureOrGOCount[QUEST_OBJECTIVES_COUNT] = {};
     uint32 reqItemId[QUEST_OBJECTIVES_COUNT] = {};
     uint32 reqItemCount[QUEST_OBJECTIVES_COUNT] = {};
@@ -70,10 +70,10 @@ struct Quest
             buffer >> repObjectiveValue;
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            buffer >> requiredOpositeRepFaction;
+            buffer >> requiredOppositeRepFaction;
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            buffer >> requiredOpositeRepValue;
+            buffer >> requiredOppositeRepValue;
 
         buffer >> nextQuestInChain;
         buffer >> rewOrReqMoney;
@@ -124,7 +124,7 @@ struct Quest
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u", entry);
+        fprintf(f, "(%u, %u", entry, g_clientBuild);
         fprintf(f, ", %u", method);
         fprintf(f, ", %u", questLevel);
         fprintf(f, ", %i", zoneOrSort);
@@ -135,9 +135,9 @@ struct Quest
             fprintf(f, ", %u", repObjectiveValue);
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            fprintf(f, ", %u", requiredOpositeRepFaction);
+            fprintf(f, ", %u", requiredOppositeRepFaction);
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            fprintf(f, ", %u", requiredOpositeRepValue);
+            fprintf(f, ", %u", requiredOppositeRepValue);
 
         fprintf(f, ", %u", nextQuestInChain);
         fprintf(f, ", %u", rewOrReqMoney);
@@ -170,7 +170,16 @@ struct Quest
         fprintf(f, ", '%s'", EscapeString(endText).c_str());
 
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
-            fprintf(f, ", %u", reqCreatureOrGOId[i]);
+        {
+            if (reqCreatureOrGOId[i] < 0)
+            {
+                // client expected gameobject template id in form (id|0x80000000)
+                fprintf(f, ", %i", int32((reqCreatureOrGOId[i] * (-1)) | 0x80000000));
+            }
+            else
+                fprintf(f, ", %i", int32(reqCreatureOrGOId[i]));
+        }
+            
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
             fprintf(f, ", %u", reqCreatureOrGOCount[i]);
         for (int i = 0; i < QUEST_OBJECTIVES_COUNT; ++i)
@@ -186,7 +195,7 @@ struct Quest
     static void WriteToSQL(std::vector<Quest> const& vQuests)
     {
         FILE* f = fopen("wdb_quest_template.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_quest_template` (`entry`");
+        fprintf(f, "REPLACE INTO `wdb_quest_template` (`entry`, `build`");
 
         fprintf(f, ", `Method`");
         fprintf(f, ", `QuestLevel`");
@@ -198,9 +207,9 @@ struct Quest
             fprintf(f, ", `RepObjectiveValue`");
 
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            fprintf(f, ", `RequiredOpositeRepFaction`");
+            fprintf(f, ", `RequiredOppositeRepFaction`");
         if (g_clientBuild >= CLIENT_BUILD_0_6_0)
-            fprintf(f, ", `RequiredOpositeRepValue`");
+            fprintf(f, ", `RequiredOppositeRepValue`");
 
         fprintf(f, ", `NextQuestInChain`");
         fprintf(f, ", `RewOrReqMoney`");

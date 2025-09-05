@@ -31,13 +31,13 @@ struct PageText
 
     void WriteSQLRow(FILE*& f) const
     {
-        fprintf(f, "(%u, %u, '%s')", entry, nextPageId, EscapeString(text).c_str());
+        fprintf(f, "(%u, %u, %u, '%s')", entry, g_clientBuild, nextPageId, EscapeString(text).c_str());
     }
 
     static void WriteToSQL(std::vector<PageText> const& vPageTexts)
     {
         FILE* f = fopen("wdb_page_text.sql", "w");
-        fprintf(f, "REPLACE INTO `wdb_page_text` (`entry`, `next_page`, `text`) VALUES \n");
+        fprintf(f, "REPLACE INTO `wdb_page_text` (`entry`, `build`, `next_page`, `text`) VALUES \n");
         uint32 count = 0;
         for (auto const& pageTextEntry : vPageTexts)
         {

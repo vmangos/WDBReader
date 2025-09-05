@@ -1,6 +1,7 @@
 DROP TABLE IF EXISTS `wdb_item_template`;
 CREATE TABLE IF NOT EXISTS `wdb_item_template` (
-  `entry` mediumint(8) unsigned NOT NULL DEFAULT '0',
+  `entry` mediumint(8) unsigned NOT NULL,
+  `build` smallint(5) unsigned NOT NULL,
   `class` tinyint(3) unsigned DEFAULT NULL,
   `subclass` tinyint(3) unsigned DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
@@ -119,6 +120,6 @@ CREATE TABLE IF NOT EXISTS `wdb_item_template` (
   `area_bound` mediumint(8) unsigned DEFAULT NULL,
   `map_bound` smallint(6) DEFAULT NULL,
   `bag_family` mediumint(9) DEFAULT NULL,
-  PRIMARY KEY (`entry`),
+  PRIMARY KEY (`entry`,`build`),
   KEY `items_index` (`class`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 ROW_FORMAT=FIXED COMMENT='Item System';
